@@ -6,6 +6,7 @@ import TablePage from './Pages/TablePage';
 import store from './Redux/Store/store';
 import VehicleForm from './Pages/VehicleForm';
 import CreateVehicle from './Pages/CreateVehicle';
+import CustomerPage from './Pages/CustomerPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<TablePage />} />
         <Route path="/:uid" element={<VehicleForm />} />
         <Route path="/create" element={<CreateVehicle />} />
+        <Route path="/customer" element={<CustomerPage />} />
       </Routes>
       </BrowserRouter>
     </Provider>
