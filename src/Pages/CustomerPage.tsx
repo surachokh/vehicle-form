@@ -6,7 +6,9 @@ import { Form, Input, Table } from "antd";
 export default function CustomerPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [formValues, setFormValues] = useState([{ value: null }]);
+  const [formValues, setFormValues] = useState([
+    { name: "", value: undefined },
+  ]);
 
   const customers = useSelector((state: any) => state?.customer?.value);
 
@@ -27,32 +29,13 @@ export default function CustomerPage() {
       limit: pageSize,
     };
 
-    if (formValues[0]?.value !== "" && formValues[0]?.value)
-      Object.assign(payload, { code: formValues[0].value });
-    if (formValues[1]?.value !== "" && formValues[1]?.value)
-      Object.assign(payload, { name: formValues[1].value });
-    if (formValues[2]?.value !== "" && formValues[2]?.value)
-      Object.assign(payload, { phone: formValues[2].value });
+    formValues.map((value) => {
+      if (value.value && value.value !== "")
+        Object.assign(payload, { [value.name]: value.value });
+    });
 
-    dispatch({ type: "REQUEST_CUSTOMER", payload });  
-  }, [page, pageSize])
-
-  useEffect(() => {
-    const payload = {
-      skip: 0,
-      limit: 10,
-    };
-
-    if (formValues[0]?.value !== "" && formValues[0]?.value)
-      Object.assign(payload, { code: formValues[0].value });
-    if (formValues[1]?.value !== "" && formValues[1]?.value)
-      Object.assign(payload, { name: formValues[1].value });
-    if (formValues[2]?.value !== "" && formValues[2]?.value)
-      Object.assign(payload, { phone: formValues[2].value });
-
-    dispatch({ type: "REQUEST_CUSTOMER", payload });  
-  }, [formValues])
-  
+    dispatch({ type: "REQUEST_CUSTOMER", payload });
+  }, [page, pageSize, formValues]);
 
   const columns = [
     {
@@ -79,11 +62,12 @@ export default function CustomerPage() {
 
   const handleChange = (_?: any, values?: any) => {
     setFormValues(values);
+    setPage(1)
   };
 
   const handlePaginationChange = (page: number, pageSize: number) => {
-    setPage(page)
-    setPageSize(pageSize)
+    setPage(page);
+    setPageSize(pageSize);
   };
 
   return (
