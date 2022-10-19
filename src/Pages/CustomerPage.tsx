@@ -6,9 +6,7 @@ import { Form, Input, Table } from "antd";
 export default function CustomerPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [formValues, setFormValues] = useState([
-    { name: "", value: undefined },
-  ]);
+  const [formValues, setFormValues] = useState([{value: undefined}]);
 
   const customers = useSelector((state: any) => state?.customer?.value);
 
@@ -25,15 +23,22 @@ export default function CustomerPage() {
 
   useEffect(() => {
     const payload = {
+      code:
+        formValues.length > 1 && formValues[0]?.value !== ""
+          ? formValues[0]?.value
+          : undefined,
+      name:
+        formValues.length > 1 && formValues[1]?.value !== ""
+          ? formValues[1]?.value
+          : undefined,
+      phone:
+        formValues.length > 1 && formValues[2]?.value !== ""
+          ? formValues[2]?.value
+          : undefined,
       skip: (page - 1) * 10,
       limit: pageSize,
     };
-
-    formValues.map((value) => {
-      if (value.value && value.value !== "")
-        Object.assign(payload, { [value.name]: value.value });
-    });
-
+    
     dispatch({ type: "REQUEST_CUSTOMER", payload });
   }, [page, pageSize, formValues]);
 
@@ -62,7 +67,7 @@ export default function CustomerPage() {
 
   const handleChange = (_?: any, values?: any) => {
     setFormValues(values);
-    setPage(1)
+    setPage(1);
   };
 
   const handlePaginationChange = (page: number, pageSize: number) => {
