@@ -4,13 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { Form, Input, Table } from "antd";
 
 export default function CustomerPage() {
+  const [page, setPage] = useState(3);
+  const [pageSize, setPageSize] = useState(10);
   const [formValues, setFormValues] = useState([{ value: null }]);
 
   const customers = useSelector((state: any) => state?.customer?.value);
 
   const initPayload = {
-    skip: "0",
-    limit: "10",
+    skip: (page - 1) * 10,
+    limit: pageSize,
   };
   const dispatch = useDispatch();
   useEffect(() => {
@@ -60,6 +62,9 @@ export default function CustomerPage() {
   };
 
   const handlePaginationChange = (page: number, pageSize: number) => {
+    setPage(page)
+    setPageSize(pageSize)
+
     const payload = {
       skip: (page - 1) * 10,
       limit: pageSize,
@@ -100,6 +105,8 @@ export default function CustomerPage() {
           columns={columns}
           pagination={{
             onChange: handlePaginationChange,
+            current: page,
+            pageSize: pageSize,
             total: customers.total,
           }}
         />
